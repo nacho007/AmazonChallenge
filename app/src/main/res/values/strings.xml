@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">AmazonChallenge</string>
+
+    <string name="dismiss_post" translatable="false">Dismiss Post</string>
+    <string name="dismiss_all" translatable="false">Dismiss All</string>
+    <string name="save_image" translatable="false">Save Image</string>
+    <string name="saved_to_photos" translatable="false">Saved to Photos</string>
+    <string name="failed_to_load_image" translatable="false">Failed to load image</string>
+    <string name="comments" translatable="false">%s comments</string>
+
+    <string name="seconds" translatable="false">"seconds"</string>
+    <string name="second" translatable="false">"second"</string>
+    <string name="minutes" translatable="false">"minutes"</string>
+    <string name="minute" translatable="false">"minute"</string>
+    <string name="hours" translatable="false">"hours"</string>
+    <string name="hour" translatable="false">"hour"</string>
+    <string name="days" translatable="false">"days"</string>
+    <string name="day" translatable="false">"day"</string>
+    <string name="years" translatable="false">"years"</string>
+    <string name="year" translatable="false">"year"</string>
+    <string name="creation_time_text" translatable="false">"%d %s ago"</string>
+
+    <string name="install_a_web_browser" translatable="false">Please install a web browser</string>
 </resources>
