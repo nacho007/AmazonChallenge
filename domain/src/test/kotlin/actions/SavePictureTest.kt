@@ -3,7 +3,6 @@ package actions
 import com.idd.domain.actions.SavePictureAction
 import com.idd.domain.repositories.SavePictureRepository
 import io.mockk.MockKAnnotations
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo

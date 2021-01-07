@@ -11,6 +11,7 @@ class GetLocalRedditEntriesAction(
 ) {
     sealed class Result {
         data class Success(val value: RedditResponse) : Result()
+        object Error : Result()
     }
 
     operator fun invoke(): Result {
