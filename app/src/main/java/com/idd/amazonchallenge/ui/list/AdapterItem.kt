@@ -1,4 +1,4 @@
-package com.idd.amazonchallenge.ui
+package com.idd.amazonchallenge.ui.list
 
 import android.view.LayoutInflater
 import android.view.View

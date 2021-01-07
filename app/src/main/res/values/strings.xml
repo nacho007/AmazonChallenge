@@ -21,4 +21,7 @@
     <string name="creation_time_text" translatable="false">"%d %s ago"</string>
 
     <string name="install_a_web_browser" translatable="false">Please install a web browser</string>
+    <string name="no_post_selected" translatable="false">No post selected</string>
+    <string name="generic_error" translatable="false">"We are experiencing difficulties with the system. Please try again later."</string>
+    <string name="list_updated" translatable="false">"List updated!"</string>
 </resources>

@@ -5,10 +5,12 @@ import android.content.SharedPreferences
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.idd.amazonchallenge.ui.list.ListViewModel
 import com.idd.domain.actions.GetLocalRedditEntriesAction
 import com.idd.domain.repositories.RedditLocalRepository
 import com.idd.infrastructure.repositories.RedditLocalRepositoryImpl
 import org.koin.android.ext.koin.androidContext
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 /**
@@ -19,9 +21,13 @@ val repositoriesModule = module {
         RedditLocalRepositoryImpl(
             androidContext(),
             provideSharedPreferences(androidContext()),
-            Gson()
+            provideGSon()
         )
     }
+}
+
+val viewModelsModule = module {
+    viewModel { ListViewModel(get()) }
 }
 
 val actionsModule = module {

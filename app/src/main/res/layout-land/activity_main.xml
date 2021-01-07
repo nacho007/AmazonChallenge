@@ -6,14 +6,32 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_list"
-        android:name="com.idd.amazonchallenge.ui.list.ListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:minWidth="@dimen/avatar_size"
+        android:name="com.idd.amazonchallenge.ui.list.ListFragment"
         android:tag="fragmentList"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/gl"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_post_selected"
+        app:layout_constraintBottom_toBottomOf="@+id/fcv_details"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/fcv_list"
+        app:layout_constraintTop_toTopOf="@+id/fcv_details" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_details"
@@ -22,7 +40,7 @@
         android:tag="fragmentDetails"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/gl"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
