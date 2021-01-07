@@ -3,6 +3,8 @@ package actions
 import com.idd.domain.actions.SavePictureAction
 import com.idd.domain.repositories.SavePictureRepository
 import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
@@ -30,13 +32,29 @@ class SavePictureTest {
     @Test
     fun `should return Result Success when picture saved correctly in gallery`() {
         //given
-        // un bitmap?
-
+        given(true)
 
         //when
-        savePictureAction(null)
+        val result = savePictureAction(null)
 
-//        result shouldBeEqualTo true
+        // then
+        result shouldBeEqualTo SavePictureAction.Result.Success
+    }
+
+    @Test
+    fun `should return Result Error when picture saved incorrectly in gallery`() {
+        //given
+        given(false)
+
+        //when
+        val result = savePictureAction(null)
+
+        // then
+        result shouldBeEqualTo SavePictureAction.Result.Error
+    }
+
+    private fun given(response: Boolean) {
+        every { savePictureRepository.savePicture(null) } returns response
     }
 
 }
