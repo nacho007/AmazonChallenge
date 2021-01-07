@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.FragmentListBinding
+import com.idd.amazonchallenge.ui.MainActivity
 import com.idd.amazonchallenge.utils.Utils
 import com.idd.amazonchallenge.utils.toast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -90,6 +91,15 @@ class ListFragment : Fragment() {
                                 }
                                 item == null -> {
                                     removeItem(view)
+                                }
+                                else -> {
+                                    viewModel.updateLocalPostStatus(item.data.id)
+                                    viewAdapter.pressedPost(
+                                        binding.rvItems.getChildAdapterPosition(
+                                            view
+                                        )
+                                    )
+                                    (activity as MainActivity).setDetail(item)
                                 }
                             }
                         }

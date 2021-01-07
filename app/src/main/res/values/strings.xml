@@ -24,4 +24,7 @@
     <string name="no_post_selected" translatable="false">No post selected</string>
     <string name="generic_error" translatable="false">"We are experiencing difficulties with the system. Please try again later."</string>
     <string name="list_updated" translatable="false">"List updated!"</string>
+
+    <string name="permission_title" translatable="false">Permission</string>
+    <string name="write_permission_request" translatable="false">We need permission to store the image in the picture gallery</string>
 </resources>
