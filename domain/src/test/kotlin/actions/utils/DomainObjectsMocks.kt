@@ -1,4 +1,4 @@
-package com.idd.amazonchallenge.utils
+package actions.utils
 
 import com.idd.domain.models.RedditResponse
 import com.idd.domain.models.RedditResponseData
