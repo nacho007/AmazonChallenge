@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.idd.domain.models.RedditResponse
+import com.idd.domain.models.ResultWrapper
 import com.idd.domain.repositories.RedditLocalRepository
 import com.idd.infrastructure.entities.RedditEntity
 import java.io.IOException
@@ -19,7 +20,7 @@ class RedditLocalRepositoryImpl(
     private val gSon: Gson
 ) : RedditLocalRepository {
 
-    override fun getReddits(): RedditResponse {
+    override fun getReddits(): ResultWrapper<RedditResponse> {
         val reddits = loadJSONFromAsset(context, "top.json")
         val redditEntity = Gson().fromJson(reddits, RedditEntity::class.java)
 
@@ -32,7 +33,7 @@ class RedditLocalRepositoryImpl(
             }
         }
 
-        return response
+        return ResultWrapper.Success(response)
     }
 
     private fun loadJSONFromAsset(context: Context, file: String?): String? {
