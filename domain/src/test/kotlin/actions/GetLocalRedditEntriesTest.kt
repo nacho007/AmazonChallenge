@@ -6,7 +6,6 @@ import com.idd.domain.models.RedditResponse
 import com.idd.domain.models.ResultWrapper
 import com.idd.domain.repositories.RedditLocalRepository
 import io.mockk.MockKAnnotations
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
