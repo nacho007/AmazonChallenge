@@ -1,6 +1,7 @@
 package com.idd.domain.actions
 
 import com.idd.domain.models.RedditResponse
+import com.idd.domain.models.ResultWrapper
 import com.idd.domain.repositories.RedditLocalRepository
 
 /**
@@ -11,10 +12,14 @@ class GetLocalRedditEntriesAction(
 ) {
     sealed class Result {
         data class Success(val value: RedditResponse) : Result()
+        object Error : Result()
     }
 
     operator fun invoke(): Result {
-        return Result.Success(redditLocalRepository.getReddits())
+        return when (val resultWrapper = redditLocalRepository.getReddits()) {
+            is ResultWrapper.Success -> Result.Success(resultWrapper.value)
+            is ResultWrapper.Error -> Result.Error
+        }
     }
 
     fun updatePostStatus(id: String) {

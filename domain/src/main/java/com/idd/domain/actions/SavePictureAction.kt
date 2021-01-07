@@ -8,10 +8,16 @@ import com.idd.domain.repositories.SavePictureRepository
 class SavePictureAction(private val savePicture: SavePictureRepository) {
 
     sealed class Result {
-        data class Success(val value: Boolean) : Result()
+        object Success : Result()
+        object Error : Result()
     }
 
     operator fun <T> invoke(param: T): Result {
-        return Result.Success(savePicture.savePicture(param))
+        return if (savePicture.savePicture(param)) {
+            Result.Success
+        } else {
+            Result.Error
+        }
     }
 }
+

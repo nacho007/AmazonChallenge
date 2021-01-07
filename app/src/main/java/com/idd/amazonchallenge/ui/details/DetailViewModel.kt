@@ -14,11 +14,11 @@ internal class DetailViewModel(
 ) : BaseViewModel<DetailViewModel.ViewState, DetailViewModel.Action>(ViewState()) {
 
     fun savePicture(bitmap: Bitmap?) {
-        val action = when (val it = savePictureAction(bitmap)) {
+        val action = when (savePictureAction(bitmap)) {
             is SavePictureAction.Result.Success -> {
-                Action.SavedPictureSuccess(it.value)
+                Action.SavedPictureSuccess
             }
-            else -> Action.SavedPictureSuccess(false)
+            else -> Action.SavedPictureError
         }
         sendAction(action)
     }
@@ -29,11 +29,15 @@ internal class DetailViewModel(
 
     override fun onReduceState(viewAction: Action): ViewState = when (viewAction) {
         is Action.SavedPictureSuccess -> state.copy(
-            saved = viewAction.saved
+            saved = true
+        )
+        is Action.SavedPictureError -> state.copy(
+            saved = false
         )
     }
 
     internal sealed class Action : BaseAction {
-        data class SavedPictureSuccess(val saved: Boolean) : Action()
+        object SavedPictureSuccess : Action()
+        object SavedPictureError : Action()
     }
 }

@@ -23,6 +23,7 @@ internal class ListViewModel(
                 is GetLocalRedditEntriesAction.Result.Success -> {
                     Action.GetRedditSuccess(it.value, isRefreshing)
                 }
+                GetLocalRedditEntriesAction.Result.Error -> Action.Failure()
             }
             sendAction(action)
         }
@@ -31,7 +32,6 @@ internal class ListViewModel(
     fun updateLocalPostStatus(id: String) {
         getLocalRedditEntriesAction.updatePostStatus(id)
     }
-
 
     internal data class ViewState(
         val redditEntries: RedditResponse? = null,
