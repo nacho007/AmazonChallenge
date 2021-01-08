@@ -40,7 +40,7 @@ val repositoriesModule = module {
         RedditLocalRepositoryImpl(
             androidContext(),
             provideSharedPreferences(androidContext()),
-            provideGSon()
+            Gson()
         )
     }
     single<RedditNetworkRepository> {
@@ -100,10 +100,6 @@ val netWorkModule = module {
         return okHttpClientBuilder.build()
     }
 
-    fun provideGSon(): Gson {
-        return GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create()
-    }
-
     fun provideRetrofit(factory: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://www.reddit.com/")
@@ -115,6 +111,10 @@ val netWorkModule = module {
     fun provideRedditClient(retrofit: Retrofit): RedditClient =
         retrofit.create(RedditClient::class.java)
 
+    fun provideGSon(): Gson {
+        return GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create()
+    }
+
     single { provideCache(androidApplication()) }
     single { provideHttpClient(get(), provideRequestInterceptor()) }
     single { provideGSon() }
@@ -123,8 +123,4 @@ val netWorkModule = module {
 }
 
 private fun provideSharedPreferences(app: Context): SharedPreferences =
-    app.getSharedPreferences(RedditLocalRepositoryImpl.USER_PREFERENCES, Context.MODE_PRIVATE)
-
-fun provideGSon(): Gson {
-    return GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create()
-}
+    app.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)

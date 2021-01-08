@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idd.amazonchallenge.BuildConfig
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.FragmentListBinding
 import com.idd.amazonchallenge.ui.MainActivity
@@ -43,13 +44,29 @@ class ListFragment : Fragment() {
             )
 
             srl.setOnRefreshListener {
-                viewModel.getLocalRedditEntries(true)
+                getRedditEntries(true)
             }
 
             btnDismissAll.setOnClickListener { removeAllItems() }
         }
         observeViewModel()
-        viewModel.getLocalRedditEntries(false)
+        getRedditEntries(false)
+    }
+
+    private fun getRedditEntries(isRefreshing: Boolean) {
+        if (BuildConfig.PRODUCT_FLAVOUR == "LOCAL") {
+            viewModel.getLocalRedditEntries(isRefreshing)
+        } else if (BuildConfig.PRODUCT_FLAVOUR == "NETWORK") {
+            viewModel.getNetWorkRedditEntries(isRefreshing)
+        }
+    }
+
+    private fun updatePostStatus(id: String) {
+        if (BuildConfig.FLAVOR == "LOCAL") {
+            viewModel.updateLocalPostStatus(id)
+        } else if (BuildConfig.FLAVOR == "NETWORK") {
+            viewModel.updateNetworkPostStatus(id)
+        }
     }
 
     private fun observeViewModel() {
@@ -93,7 +110,8 @@ class ListFragment : Fragment() {
                                     removeItem(view)
                                 }
                                 else -> {
-                                    viewModel.updateLocalPostStatus(item.data.id)
+                                    updatePostStatus(item.data.id)
+
                                     viewAdapter.pressedPost(
                                         binding.rvItems.getChildAdapterPosition(
                                             view

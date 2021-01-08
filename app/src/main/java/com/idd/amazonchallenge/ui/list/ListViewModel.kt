@@ -36,6 +36,23 @@ internal class ListViewModel(
         getLocalRedditEntriesAction.updatePostStatus(id)
     }
 
+    fun getNetWorkRedditEntries(isRefreshing: Boolean) {
+        viewModelScope.launch {
+            val action = when (val it = getNetWorkRedditEntriesAction()) {
+                is GetNetWorkRedditEntriesAction.Result.Success -> {
+                    Action.GetRedditSuccess(it.value, isRefreshing)
+                }
+                is GetNetWorkRedditEntriesAction.Result.Error -> Action.Failure(message = it.value?.description)
+                GetNetWorkRedditEntriesAction.Result.NetworkError -> Action.Failure(errorResourceId = R.string.internet_error)
+            }
+            sendAction(action)
+        }
+    }
+
+    fun updateNetworkPostStatus(id: String) {
+        getNetWorkRedditEntriesAction.updatePostStatus(id)
+    }
+
     internal data class ViewState(
         val redditEntries: RedditResponse? = null,
         val isRefreshing: Boolean = false,

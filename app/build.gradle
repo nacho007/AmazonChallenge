@@ -42,6 +42,11 @@ android {
     productFlavors {
         local {
             versionNameSuffix "-local"
+            buildConfigField "String", "PRODUCT_FLAVOUR", '"LOCAL"'
+        }
+        network {
+            versionNameSuffix "-network"
+            buildConfigField "String", "PRODUCT_FLAVOUR", '"NETWORK"'
         }
     }
 
