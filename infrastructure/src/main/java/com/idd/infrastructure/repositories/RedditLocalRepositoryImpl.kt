@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.models.ResultWrapper
+import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.repositories.RedditLocalRepository
 import com.idd.infrastructure.entities.RedditEntity
 import java.io.IOException

@@ -1,7 +1,7 @@
 package com.idd.domain.actions
 
-import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.models.ResultWrapper
+import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.repositories.RedditLocalRepository
 
 /**

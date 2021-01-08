@@ -76,7 +76,6 @@ class ListFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.stateLiveData.observe(viewLifecycleOwner, {
-
             if (it.isLoading) {
                 binding.pbLoader.visibility = View.VISIBLE
             } else {
@@ -145,6 +144,7 @@ class ListFragment : Fragment() {
         for (i in viewAdapter.itemCount - 1 downTo 0) {
             viewAdapter.deleteItem(i)
         }
+        viewModel.deleteAllPost()
     }
 
     private fun removeItem(view: View, item: RedditResponseDataChildren) {

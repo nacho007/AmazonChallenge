@@ -79,6 +79,10 @@ internal class ListViewModel(
         (redditResponse?.redditResponseData?.children as ArrayList).remove(element)
     }
 
+    fun deleteAllPost() {
+        (redditResponse?.redditResponseData?.children as ArrayList).clear()
+    }
+
     internal data class ViewState(
         val redditEntries: RedditResponse? = null,
         val isLoading: Boolean = false,
