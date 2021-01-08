@@ -76,7 +76,7 @@ class ListFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.stateLiveData.observe(viewLifecycleOwner, {
-            if (it.isLoading) {
+            if (it.isLoading && !binding.srl.isRefreshing) {
                 binding.pbLoader.visibility = View.VISIBLE
             } else {
                 binding.pbLoader.visibility = View.GONE

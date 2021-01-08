@@ -3,6 +3,8 @@ package com.idd.amazonchallenge.ui.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.idd.amazonchallenge.R
@@ -71,9 +73,15 @@ class AdapterItem(
             binding.tvNumComments.text =
                 itemView.context.getString(R.string.comments, item.data.numComments.toString())
 
-            if (item.data.thumbnail.isNotEmpty()) {
+            if (item.data.thumbnail.isNotEmpty() && URLUtil.isValidUrl(item.data.thumbnail)) {
                 Glide.with(itemView.context)
                     .load(item.data.thumbnail)
+                    .placeholder(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_baseline_image_24
+                        )
+                    )
                     .into(binding.ivAvatar)
                 binding.ivAvatar.visibility = View.VISIBLE
             } else {
