@@ -15,8 +15,17 @@ import com.idd.domain.models.reddit.RedditResponseDataChildren
  */
 class AdapterItem(
     var dataSet: MutableList<RedditResponseDataChildren>,
-    private val itemClickListener: (view: View, item: RedditResponseDataChildren?, avatarUrl: String?) -> Unit
+    private val itemClickListener: (
+        itemResponse: ItemResponse
+    ) -> Unit
 ) : RecyclerView.Adapter<AdapterItem.ViewHolder>() {
+
+    data class ItemResponse(
+        val view: View,
+        val item: RedditResponseDataChildren? = null,
+        val avatarUrl: String = "",
+        val removingPost: Boolean = false
+    )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = AdapterItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -43,7 +52,9 @@ class AdapterItem(
 
     class ViewHolder(
         private val binding: AdapterItemBinding,
-        private val itemClickListener: (view: View, item: RedditResponseDataChildren?, avatarUrl: String?) -> Unit
+        private val itemClickListener: (
+            itemResponse: ItemResponse
+        ) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun setItem(item: RedditResponseDataChildren) {
@@ -70,15 +81,26 @@ class AdapterItem(
             }
 
             binding.ivAvatar.setOnClickListener {
-                itemClickListener.invoke(binding.root, null, item.data.url)
+                itemClickListener.invoke(
+                    ItemResponse(
+                        view = binding.root,
+                        avatarUrl = item.data.url
+                    )
+                )
             }
 
             binding.clContent.setOnClickListener {
-                itemClickListener.invoke(binding.root, item, null)
+                itemClickListener.invoke(ItemResponse(view = binding.root, item = item))
             }
 
             binding.tvDismissPost.setOnClickListener {
-                itemClickListener.invoke(binding.root, null, null)
+                itemClickListener.invoke(
+                    ItemResponse(
+                        view = binding.root,
+                        item = item,
+                        removingPost = true
+                    )
+                )
             }
         }
     }
