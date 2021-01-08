@@ -1,4 +1,4 @@
-package com.idd.domain.models
+package com.idd.domain.models.reddit
 
 import java.io.Serializable
 

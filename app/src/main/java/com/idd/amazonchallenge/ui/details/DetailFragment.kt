@@ -22,7 +22,7 @@ import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.FragmentDetailBinding
 import com.idd.amazonchallenge.utils.showPermissionRequestDialog
 import com.idd.amazonchallenge.utils.toast
-import com.idd.domain.models.RedditParams
+import com.idd.domain.models.reddit.RedditParams
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**

@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.AdapterItemBinding
 import com.idd.amazonchallenge.utils.TimeUtils
-import com.idd.domain.models.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildren
 
 /**
  * Created by ignaciodeandreisdenis on 1/6/21.

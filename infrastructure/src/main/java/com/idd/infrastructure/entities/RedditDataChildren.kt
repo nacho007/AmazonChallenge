@@ -1,7 +1,7 @@
 package com.idd.infrastructure.entities
 
 import com.google.gson.annotations.SerializedName
-import com.idd.domain.models.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildren
 
 /**
  * Created by ignaciodeandreisdenis on 1/6/21.

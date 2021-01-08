@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.idd.amazonchallenge.databinding.ActivityMainBinding
 import com.idd.amazonchallenge.ui.details.DetailFragment
 import com.idd.amazonchallenge.ui.list.ListFragment
-import com.idd.domain.models.RedditParams
-import com.idd.domain.models.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditParams
+import com.idd.domain.models.reddit.RedditResponseDataChildren
 
 class MainActivity : AppCompatActivity() {
 

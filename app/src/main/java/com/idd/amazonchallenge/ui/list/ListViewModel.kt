@@ -7,14 +7,16 @@ import com.idd.amazonchallenge.ui.common.BaseViewModel
 import com.idd.amazonchallenge.ui.common.BaseViewState
 import com.idd.amazonchallenge.ui.common.GenericError
 import com.idd.domain.actions.GetLocalRedditEntriesAction
-import com.idd.domain.models.RedditResponse
+import com.idd.domain.actions.GetNetWorkRedditEntriesAction
+import com.idd.domain.models.reddit.RedditResponse
 import kotlinx.coroutines.launch
 
 /**
  * Created by ignaciodeandreisdenis on 1/7/21.
  */
 internal class ListViewModel(
-    private val getLocalRedditEntriesAction: GetLocalRedditEntriesAction
+    private val getLocalRedditEntriesAction: GetLocalRedditEntriesAction,
+    private val getNetWorkRedditEntriesAction: GetNetWorkRedditEntriesAction
 ) : BaseViewModel<ListViewModel.ViewState, ListViewModel.Action>(ViewState()) {
 
     fun getLocalRedditEntries(isRefreshing: Boolean) {
@@ -24,6 +26,7 @@ internal class ListViewModel(
                     Action.GetRedditSuccess(it.value, isRefreshing)
                 }
                 GetLocalRedditEntriesAction.Result.Error -> Action.Failure()
+                GetLocalRedditEntriesAction.Result.NetworkError -> Action.Failure(errorResourceId = R.string.internet_error)
             }
             sendAction(action)
         }

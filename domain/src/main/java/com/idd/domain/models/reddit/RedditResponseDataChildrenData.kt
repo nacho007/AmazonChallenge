@@ -1,4 +1,4 @@
-package com.idd.domain.models
+package com.idd.domain.models.reddit
 
 /**
  * Created by ignaciodeandreisdenis on 1/6/21.

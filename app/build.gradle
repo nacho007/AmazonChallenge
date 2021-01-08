@@ -81,6 +81,14 @@ dependencies {
     def navVersion = "2.3.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$navVersion"
 
+
+    def retrofitVersion = '2.9.0'
+    def okHttpVersion = '4.7.2'
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.google.code.gson:gson:$gSonVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
