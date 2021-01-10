@@ -24,6 +24,7 @@ internal class ListViewModel(
 ) : BaseViewModel<ListViewModel.ViewState, ListViewModel.Action>(ViewState()) {
 
     private var redditResponse: RedditResponse? = null
+    private var after: String? = null
 
     override fun onLoadData() {
         if (redditResponse == null) {
@@ -60,9 +61,10 @@ internal class ListViewModel(
     fun getNetWorkRedditEntries() {
         sendAction(Action.Loading)
         viewModelScope.launch {
-            val action = when (val it = getNetWorkRedditEntriesAction()) {
+            val action = when (val it = getNetWorkRedditEntriesAction(PAGE_SIZE, after)) {
                 is GetNetWorkRedditEntriesAction.Result.Success -> {
                     redditResponse = it.value
+                    after = redditResponse?.redditResponseData?.after
                     markVisitedPosts()
                     Action.GetRedditSuccess(redditResponse)
                 }
@@ -137,6 +139,10 @@ internal class ListViewModel(
         ) : Action()
 
         object Loading : Action()
+    }
+
+    companion object {
+        const val PAGE_SIZE = 50
     }
 }
 

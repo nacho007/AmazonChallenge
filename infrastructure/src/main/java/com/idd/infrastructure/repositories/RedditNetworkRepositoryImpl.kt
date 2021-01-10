@@ -19,9 +19,15 @@ class RedditNetworkRepositoryImpl(
     private val gSon: Gson
 ) : RedditNetworkRepository {
 
-    override suspend fun getReddits(): ResultWrapper<RedditResponse> {
+    override suspend fun getReddits(pageSize: Int, after: String?): ResultWrapper<RedditResponse> {
         return responseHandler {
-            client.getTopReddits().toRedditResponse()
+            val hasMap = if (after?.isNotEmpty() == true) {
+                hashMapOf(LIMIT to pageSize.toString(), AFTER to after)
+            } else {
+                hashMapOf(LIMIT to pageSize.toString())
+            }
+
+            client.getTopReddits(hasMap).toRedditResponse()
         }
     }
 
@@ -57,5 +63,7 @@ class RedditNetworkRepositoryImpl(
 
     companion object {
         const val IDS = "IDS"
+        const val LIMIT = "limit"
+        const val AFTER = "after"
     }
 }
