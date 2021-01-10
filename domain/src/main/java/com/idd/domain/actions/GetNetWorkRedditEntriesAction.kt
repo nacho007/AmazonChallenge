@@ -17,8 +17,8 @@ class GetNetWorkRedditEntriesAction(
         object NetworkError : Result()
     }
 
-    suspend operator fun invoke(): Result {
-        return when (val result = redditNetworkRepository.getReddits()) {
+    suspend operator fun invoke(pageSize: Int, after: String?): Result {
+        return when (val result = redditNetworkRepository.getReddits(pageSize, after)) {
             is ResultWrapper.Success -> Result.Success(result.value)
             is ResultWrapper.NetworkError -> Result.NetworkError
             is ResultWrapper.Error -> Result.Error(result.error)

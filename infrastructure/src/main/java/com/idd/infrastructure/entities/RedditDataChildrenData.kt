@@ -23,8 +23,7 @@ data class RedditDataChildrenData(
             created = created,
             thumbnail = thumbnail,
             url = url,
-            numComments = numComments,
-            readPost = false
+            numComments = numComments
         )
     }
 }

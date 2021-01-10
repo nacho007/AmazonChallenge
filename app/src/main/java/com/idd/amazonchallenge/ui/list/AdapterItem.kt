@@ -2,6 +2,8 @@ package com.idd.amazonchallenge.ui.list
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.webkit.URLUtil
 import androidx.core.content.ContextCompat
@@ -10,13 +12,13 @@ import com.bumptech.glide.Glide
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.AdapterItemBinding
 import com.idd.amazonchallenge.utils.TimeUtils
-import com.idd.domain.models.reddit.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildrenData
 
 /**
  * Created by ignaciodeandreisdenis on 1/6/21.
  */
 class AdapterItem(
-    var dataSet: MutableList<RedditResponseDataChildren>,
+    var dataSet: MutableList<RedditResponseDataChildrenData>,
     private val itemClickListener: (
         itemResponse: ItemResponse
     ) -> Unit
@@ -24,7 +26,7 @@ class AdapterItem(
 
     data class ItemResponse(
         val view: View,
-        val item: RedditResponseDataChildren? = null,
+        val item: RedditResponseDataChildrenData? = null,
         val avatarUrl: String = "",
         val removingPost: Boolean = false
     )
@@ -48,7 +50,7 @@ class AdapterItem(
     }
 
     fun pressedPost(position: Int) {
-        dataSet[position].data.readPost = true
+        dataSet[position].readPost = true
         notifyDataSetChanged()
     }
 
@@ -59,23 +61,30 @@ class AdapterItem(
         ) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setItem(item: RedditResponseDataChildren) {
-            if (item.data.readPost) {
-                binding.ivStatus.visibility = View.GONE
+        fun setItem(item: RedditResponseDataChildrenData) {
+            binding.ivStatus.visibility = if (item.readPost) {
+                GONE
             } else {
-                binding.ivStatus.visibility = View.VISIBLE
+                VISIBLE
             }
 
-            binding.tvAuthor.text = item.data.author
-            binding.tvTitle.text = item.data.title
-            binding.tvCreationDate.text =
-                TimeUtils.entryDateFormatter(itemView.context, item.data.created)
-            binding.tvNumComments.text =
-                itemView.context.getString(R.string.comments, item.data.numComments.toString())
+            binding.pbLoader.visibility = if (item.isLoading) {
+                VISIBLE
+            } else {
+                GONE
+            }
 
-            if (item.data.thumbnail.isNotEmpty() && URLUtil.isValidUrl(item.data.thumbnail)) {
+            item.isLoading = false
+            binding.tvAuthor.text = item.author
+            binding.tvTitle.text = item.title
+            binding.tvCreationDate.text =
+                TimeUtils.entryDateFormatter(itemView.context, item.created)
+            binding.tvNumComments.text =
+                itemView.context.getString(R.string.comments, item.numComments.toString())
+
+            if (item.thumbnail.isNotEmpty() && URLUtil.isValidUrl(item.thumbnail)) {
                 Glide.with(itemView.context)
-                    .load(item.data.thumbnail)
+                    .load(item.thumbnail)
                     .placeholder(
                         ContextCompat.getDrawable(
                             itemView.context,
@@ -83,16 +92,16 @@ class AdapterItem(
                         )
                     )
                     .into(binding.ivAvatar)
-                binding.ivAvatar.visibility = View.VISIBLE
+                binding.ivAvatar.visibility = VISIBLE
             } else {
-                binding.ivAvatar.visibility = View.GONE
+                binding.ivAvatar.visibility = GONE
             }
 
             binding.ivAvatar.setOnClickListener {
                 itemClickListener.invoke(
                     ItemResponse(
                         view = binding.root,
-                        avatarUrl = item.data.url
+                        avatarUrl = item.url
                     )
                 )
             }

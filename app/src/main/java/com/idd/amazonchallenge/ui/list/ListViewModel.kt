@@ -5,14 +5,15 @@ import com.idd.amazonchallenge.BuildConfig
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.constants.LOCAL
 import com.idd.amazonchallenge.constants.NETWORK
+import com.idd.amazonchallenge.constants.PAGE_SIZE
 import com.idd.amazonchallenge.ui.common.BaseAction
 import com.idd.amazonchallenge.ui.common.BaseViewModel
 import com.idd.amazonchallenge.ui.common.BaseViewState
 import com.idd.amazonchallenge.ui.common.GenericError
 import com.idd.domain.actions.GetLocalRedditEntriesAction
 import com.idd.domain.actions.GetNetWorkRedditEntriesAction
-import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.models.reddit.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildrenData
 import kotlinx.coroutines.launch
 
 /**
@@ -23,10 +24,12 @@ internal class ListViewModel(
     private val getNetWorkRedditEntriesAction: GetNetWorkRedditEntriesAction
 ) : BaseViewModel<ListViewModel.ViewState, ListViewModel.Action>(ViewState()) {
 
-    private var redditResponse: RedditResponse? = null
+    private var redditResponse: MutableList<RedditResponseDataChildrenData>? = mutableListOf()
+    private var after: String? = null
 
     override fun onLoadData() {
-        if (redditResponse == null) {
+        if (redditResponse.isNullOrEmpty()) {
+            sendAction(Action.Loading)
             if (BuildConfig.FLAVOR == LOCAL) {
                 getLocalRedditEntries()
             } else if (BuildConfig.FLAVOR == NETWORK) {
@@ -38,11 +41,11 @@ internal class ListViewModel(
     }
 
     fun getLocalRedditEntries() {
-        sendAction(Action.Loading)
         viewModelScope.launch {
             val action = when (val it = getLocalRedditEntriesAction()) {
                 is GetLocalRedditEntriesAction.Result.Success -> {
-                    redditResponse = it.value
+                    addAll(it.value.redditResponseData.children)
+                    after = it.value.redditResponseData.after
                     markVisitedPosts()
                     Action.GetRedditSuccess(redditResponse)
                 }
@@ -58,11 +61,11 @@ internal class ListViewModel(
     }
 
     fun getNetWorkRedditEntries() {
-        sendAction(Action.Loading)
         viewModelScope.launch {
-            val action = when (val it = getNetWorkRedditEntriesAction()) {
+            val action = when (val it = getNetWorkRedditEntriesAction(PAGE_SIZE, after)) {
                 is GetNetWorkRedditEntriesAction.Result.Success -> {
-                    redditResponse = it.value
+                    addAll(it.value.redditResponseData.children)
+                    after = it.value.redditResponseData.after
                     markVisitedPosts()
                     Action.GetRedditSuccess(redditResponse)
                 }
@@ -77,34 +80,47 @@ internal class ListViewModel(
         getNetWorkRedditEntriesAction.updatePostStatus(id)
     }
 
+    private fun addAll(listToAppend: List<RedditResponseDataChildren>?) {
+        redditResponse?.addAll(listToAppend?.map { children ->
+            RedditResponseDataChildrenData(
+                id = children.data.id,
+                title = children.data.title,
+                author = children.data.author,
+                created = children.data.created,
+                thumbnail = children.data.thumbnail,
+                url = children.data.url,
+                numComments = children.data.numComments,
+                readPost = false,
+                isLoading = false
+            )
+        }?.toMutableList() ?: mutableListOf())
+    }
+
     private fun markVisitedPosts() {
-        if (BuildConfig.FLAVOR == LOCAL) {
-            val visitedPostIds = getLocalRedditEntriesAction.getVisitedPosts()
-            redditResponse?.redditResponseData?.children?.forEach {
-                if (visitedPostIds.contains(it.data.id)) {
-                    it.data.readPost = true
-                }
-            }
-        } else if (BuildConfig.FLAVOR == NETWORK) {
-            val visitedPostIds = getNetWorkRedditEntriesAction.getVisitedPosts()
-            redditResponse?.redditResponseData?.children?.forEach {
-                if (visitedPostIds.contains(it.data.id)) {
-                    it.data.readPost = true
-                }
+        val visitedPostIds = when (BuildConfig.FLAVOR) {
+            LOCAL -> getLocalRedditEntriesAction.getVisitedPosts()
+            NETWORK -> getNetWorkRedditEntriesAction.getVisitedPosts()
+            else -> listOf()
+        }
+
+        redditResponse?.forEach {
+            if (visitedPostIds.contains(it.id)) {
+                it.readPost = true
             }
         }
     }
 
-    fun deletePost(element: RedditResponseDataChildren) {
-        (redditResponse?.redditResponseData?.children as ArrayList).remove(element)
+    fun deletePost(element: RedditResponseDataChildrenData) {
+        redditResponse?.remove(element)
     }
 
     fun deleteAllPost() {
-        (redditResponse?.redditResponseData?.children as ArrayList).clear()
+        after = ""
+        redditResponse?.clear()
     }
 
     internal data class ViewState(
-        val redditEntries: RedditResponse? = null,
+        val redditEntries: MutableList<RedditResponseDataChildrenData>? = null,
         val isLoading: Boolean = false,
         val error: GenericError? = null
     ) : BaseViewState
@@ -128,7 +144,7 @@ internal class ListViewModel(
     }
 
     internal sealed class Action : BaseAction {
-        data class GetRedditSuccess(val redditResponse: RedditResponse?) :
+        data class GetRedditSuccess(val redditResponse: MutableList<RedditResponseDataChildrenData>?) :
             Action()
 
         data class Failure(

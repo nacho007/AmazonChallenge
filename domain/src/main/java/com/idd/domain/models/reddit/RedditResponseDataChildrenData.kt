@@ -11,5 +11,6 @@ data class RedditResponseDataChildrenData(
     val thumbnail: String,
     val url: String,
     val numComments: Int,
-    var readPost: Boolean
+    var readPost: Boolean = false,
+    var isLoading: Boolean = false
 )

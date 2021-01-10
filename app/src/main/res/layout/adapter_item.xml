@@ -94,5 +94,14 @@
         style="@style/TextViewLightStyle"
         tools:text="4123 comments" />
 
+    <ProgressBar
+        android:id="@+id/pb_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_num_comments"
+        style="?android:attr/progressBarStyle" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
