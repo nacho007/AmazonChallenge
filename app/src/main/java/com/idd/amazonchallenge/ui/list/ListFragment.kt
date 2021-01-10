@@ -3,6 +3,8 @@ package com.idd.amazonchallenge.ui.list
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -51,6 +53,7 @@ class ListFragment : Fragment() {
                 getRedditEntries()
             }
 
+            tvEmpty.visibility = GONE
             btnDismissAll.setOnClickListener { removeAllItems() }
         }
 
@@ -77,10 +80,11 @@ class ListFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.stateLiveData.observe(viewLifecycleOwner, {
             if (it.isLoading && !binding.srl.isRefreshing) {
-                binding.pbLoader.visibility = View.VISIBLE
+                binding.pbLoader.visibility = VISIBLE
             } else {
-                binding.pbLoader.visibility = View.GONE
+                binding.pbLoader.visibility = GONE
             }
+
 
             it.redditEntries?.let { redditResponse ->
                 if (binding.rvItems.adapter == null) {
@@ -136,11 +140,20 @@ class ListFragment : Fragment() {
                     binding.srl.isRefreshing = false
                     context?.toast(getString(R.string.list_updated))
                 }
+
+                binding.tvEmpty.visibility =
+                    if (it.redditEntries.redditResponseData.children?.isNotEmpty() == true) {
+                        GONE
+                    } else {
+                        VISIBLE
+                    }
+
             }
         })
     }
 
     private fun removeAllItems() {
+        binding.tvEmpty.visibility = VISIBLE
         for (i in viewAdapter.itemCount - 1 downTo 0) {
             viewAdapter.deleteItem(i)
         }
