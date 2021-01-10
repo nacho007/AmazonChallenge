@@ -6,7 +6,7 @@ import com.idd.amazonchallenge.databinding.ActivityMainBinding
 import com.idd.amazonchallenge.ui.details.DetailFragment
 import com.idd.amazonchallenge.ui.list.ListFragment
 import com.idd.domain.models.reddit.RedditParams
-import com.idd.domain.models.reddit.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildrenData
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,13 +17,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
-    fun setDetail(item: RedditResponseDataChildren) {
+    fun setDetail(item: RedditResponseDataChildrenData) {
         supportFragmentManager.beginTransaction()
             .replace(binding.fcvDetails.id, DetailFragment().apply {
                 val args = Bundle()
                 args.putSerializable(
                     ListFragment.REDDIT_PARAMS,
-                    RedditParams(item.data.author ?: "", item.data.thumbnail, item.data.title)
+                    RedditParams(item.author ?: "", item.thumbnail, item.title)
                 )
                 arguments = args
             }).addToBackStack(null).commit()

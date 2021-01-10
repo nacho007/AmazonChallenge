@@ -30,4 +30,5 @@
 
     <string name="internet_error" translatable="false">"Internet connection not detected. Please check your connection and try again."</string>
     <string name="no_posts" translatable="false">No Posts!</string>
+    <string name="no_more_data" translatable="false">"No more data to display"</string>
 </resources>

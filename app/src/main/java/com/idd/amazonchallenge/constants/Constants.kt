@@ -5,3 +5,4 @@ package com.idd.amazonchallenge.constants
  */
 const val LOCAL = "local"
 const val NETWORK = "network"
+const val PAGE_SIZE = 10

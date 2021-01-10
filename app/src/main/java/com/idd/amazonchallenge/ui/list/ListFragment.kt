@@ -14,11 +14,12 @@ import com.idd.amazonchallenge.BuildConfig
 import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.constants.LOCAL
 import com.idd.amazonchallenge.constants.NETWORK
+import com.idd.amazonchallenge.constants.PAGE_SIZE
 import com.idd.amazonchallenge.databinding.FragmentListBinding
 import com.idd.amazonchallenge.ui.MainActivity
 import com.idd.amazonchallenge.utils.Utils
 import com.idd.amazonchallenge.utils.toast
-import com.idd.domain.models.reddit.RedditResponseDataChildren
+import com.idd.domain.models.reddit.RedditResponseDataChildrenData
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -29,6 +30,7 @@ class ListFragment : Fragment() {
     private val binding by lazy { FragmentListBinding.inflate(layoutInflater) }
     private lateinit var viewAdapter: AdapterItem
     private val viewModel: ListViewModel by viewModel()
+    private var scrollListener: EndlessRecyclerViewScrollListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,6 +52,7 @@ class ListFragment : Fragment() {
             )
 
             srl.setOnRefreshListener {
+                viewModel.deleteAllPost()
                 getRedditEntries()
             }
 
@@ -59,6 +62,19 @@ class ListFragment : Fragment() {
 
         observeViewModel()
         viewModel.loadData()
+    }
+
+    private fun createListener() {
+        scrollListener = object :
+            EndlessRecyclerViewScrollListener(binding.rvItems.layoutManager as LinearLayoutManager) {
+
+            public override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
+                if (viewAdapter.itemCount / PAGE_SIZE >= page) {
+                    viewAdapter.isLoading = true
+                    getRedditEntries()
+                }
+            }
+        }
     }
 
     private fun getRedditEntries() {
@@ -85,7 +101,6 @@ class ListFragment : Fragment() {
                 binding.pbLoader.visibility = GONE
             }
 
-
             it.redditEntries?.let { redditResponse ->
                 if (binding.rvItems.adapter == null) {
                     binding.rvItems.apply {
@@ -98,10 +113,10 @@ class ListFragment : Fragment() {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(context)
 
-                        viewAdapter = AdapterItem(
-                            redditResponse.redditResponseData.children?.toMutableList()
-                                ?: arrayListOf()
-                        ) { itemResponse ->
+                        createListener()
+                        addOnScrollListener(scrollListener as RecyclerView.OnScrollListener)
+
+                        viewAdapter = AdapterItem(redditResponse) { itemResponse ->
                             when {
                                 itemResponse.avatarUrl.isNotEmpty() -> {
                                     Utils.openWebBrowser(requireContext(), itemResponse.avatarUrl)
@@ -112,7 +127,7 @@ class ListFragment : Fragment() {
                                     }
                                 }
                                 else -> {
-                                    itemResponse.item?.data?.id?.let { id ->
+                                    itemResponse.item?.id?.let { id ->
                                         updatePostStatus(id)
                                     }
 
@@ -133,16 +148,14 @@ class ListFragment : Fragment() {
                     viewAdapter.stateRestorationPolicy =
                         RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
                 } else {
-                    viewAdapter.dataSet =
-                        redditResponse.redditResponseData.children?.toMutableList()
-                            ?: arrayListOf()
+                    viewAdapter.dataSet = redditResponse
                     viewAdapter.notifyDataSetChanged()
                     binding.srl.isRefreshing = false
                     context?.toast(getString(R.string.list_updated))
                 }
 
                 binding.tvEmpty.visibility =
-                    if (it.redditEntries.redditResponseData.children?.isNotEmpty() == true) {
+                    if (it.redditEntries.isNotEmpty()) {
                         GONE
                     } else {
                         VISIBLE
@@ -160,7 +173,7 @@ class ListFragment : Fragment() {
         viewModel.deleteAllPost()
     }
 
-    private fun removeItem(view: View, item: RedditResponseDataChildren) {
+    private fun removeItem(view: View, item: RedditResponseDataChildrenData) {
         viewAdapter.deleteItem(binding.rvItems.getChildAdapterPosition(view))
         viewModel.deletePost(item)
     }
