@@ -6,6 +6,9 @@ import android.content.SharedPreferences
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.idd.amazonchallenge.BuildConfig
+import com.idd.amazonchallenge.constants.LOCAL
+import com.idd.amazonchallenge.constants.NETWORK
 import com.idd.amazonchallenge.ui.details.DetailViewModel
 import com.idd.amazonchallenge.ui.list.ListViewModel
 import com.idd.domain.actions.GetLocalRedditEntriesAction
@@ -38,17 +41,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 val repositoriesModule = module {
     single<RedditLocalRepository> {
         RedditLocalRepositoryImpl(
-            androidContext(),
-            provideSharedPreferences(androidContext()),
-            Gson()
+                androidContext(),
+                provideSharedPreferences(androidContext()),
+                Gson()
         )
     }
     single<RedditNetworkRepository> {
         RedditNetworkRepositoryImpl(
-            get(),
-            get(),
-            provideSharedPreferences(androidContext()),
-            Gson()
+                get(),
+                get(),
+                provideSharedPreferences(androidContext()),
+                Gson()
         )
     }
     single<SavePictureRepository> { SavePictureRepositoryImpl(androidContext()) }
@@ -79,11 +82,11 @@ val netWorkModule = module {
                 val request = chain.request()
 
                 val url = request.url.newBuilder()
-                    .build()
+                        .build()
 
                 val newRequest = request.newBuilder()
-                    .url(url)
-                    .build()
+                        .url(url)
+                        .build()
 
                 return chain.proceed(newRequest)
             }
@@ -93,23 +96,23 @@ val netWorkModule = module {
     fun provideHttpClient(cache: Cache, interceptor: Interceptor): OkHttpClient {
         val logging = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
         val okHttpClientBuilder = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .addInterceptor(logging)
-            .cache(cache)
+                .addInterceptor(interceptor)
+                .addInterceptor(logging)
+                .cache(cache)
 
         return okHttpClientBuilder.build()
     }
 
     fun provideRetrofit(factory: Gson, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://www.reddit.com/")
-            .addConverterFactory(GsonConverterFactory.create(factory))
-            .client(client)
-            .build()
+                .baseUrl("https://www.reddit.com/")
+                .addConverterFactory(GsonConverterFactory.create(factory))
+                .client(client)
+                .build()
     }
 
     fun provideRedditClient(retrofit: Retrofit): RedditClient =
-        retrofit.create(RedditClient::class.java)
+            retrofit.create(RedditClient::class.java)
 
     fun provideGSon(): Gson {
         return GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create()
@@ -122,5 +125,11 @@ val netWorkModule = module {
     single { provideRedditClient(get()) }
 }
 
-private fun provideSharedPreferences(app: Context): SharedPreferences =
-    app.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+private fun provideSharedPreferences(app: Context): SharedPreferences {
+    return when (BuildConfig.FLAVOR) {
+        LOCAL -> app.getSharedPreferences("user_preferences_local", Context.MODE_PRIVATE)
+        NETWORK -> app.getSharedPreferences("user_preferences_network", Context.MODE_PRIVATE)
+        else -> app.getSharedPreferences("user_preferences", Context.MODE_PRIVATE)
+    }
+}
+

@@ -62,9 +62,9 @@ class ListFragment : Fragment() {
     }
 
     private fun getRedditEntries() {
-        if (BuildConfig.PRODUCT_FLAVOUR == LOCAL) {
+        if (BuildConfig.FLAVOR == LOCAL) {
             viewModel.getLocalRedditEntries()
-        } else if (BuildConfig.PRODUCT_FLAVOUR == NETWORK) {
+        } else if (BuildConfig.FLAVOR == NETWORK) {
             viewModel.getNetWorkRedditEntries()
         }
     }

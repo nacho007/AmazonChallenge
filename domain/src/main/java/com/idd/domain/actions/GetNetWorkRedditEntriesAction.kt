@@ -29,4 +29,8 @@ class GetNetWorkRedditEntriesAction(
     fun updatePostStatus(id: String) {
         redditNetworkRepository.updatePostStatus(id)
     }
+
+    fun getVisitedPosts(): List<String> {
+        return redditNetworkRepository.getVisitedPosts()
+    }
 }

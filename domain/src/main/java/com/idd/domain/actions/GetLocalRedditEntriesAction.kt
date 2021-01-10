@@ -27,4 +27,8 @@ class GetLocalRedditEntriesAction(
     fun updatePostStatus(id: String) {
         redditLocalRepository.updatePostStatus(id)
     }
+
+    fun getVisitedPosts(): List<String> {
+        return redditLocalRepository.getVisitedPosts()
+    }
 }

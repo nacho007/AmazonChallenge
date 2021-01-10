@@ -20,13 +20,7 @@ class RedditNetworkRepositoryImpl(
 ) : RedditNetworkRepository {
 
     override suspend fun getReddits(): ResultWrapper<RedditResponse> {
-        val visitedPostIds = returnIdList()
         return responseHandler {
-//            client.getTopReddits().toRedditResponse().redditResponseData.children?.forEach {
-//                if (visitedPostIds.contains(it.data.id)) {
-//                    it.data.visited = true
-//                }
-//            }
             client.getTopReddits().toRedditResponse()
         }
     }
@@ -41,6 +35,16 @@ class RedditNetworkRepositoryImpl(
         sharedPreferences.edit().putString(IDS, gSon.toJson(idList)).apply()
     }
 
+    override fun getVisitedPosts(): List<String> {
+        val listString = sharedPreferences.getString(RedditLocalRepositoryImpl.IDS, "")
+        val type = object : TypeToken<ArrayList<String>>() {}.type
+        return if (listString.isNullOrEmpty()) {
+            arrayListOf()
+        } else {
+            gSon.fromJson(listString, type)
+        }
+    }
+
     private fun returnIdList(): ArrayList<String> {
         val listString = sharedPreferences.getString(IDS, "")
         val type = object : TypeToken<ArrayList<String>>() {}.type
@@ -52,8 +56,6 @@ class RedditNetworkRepositoryImpl(
     }
 
     companion object {
-        const val USER_PREFERENCES = "user_preferences"
         const val IDS = "IDS"
     }
-
 }

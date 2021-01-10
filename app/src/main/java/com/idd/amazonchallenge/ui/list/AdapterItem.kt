@@ -48,7 +48,7 @@ class AdapterItem(
     }
 
     fun pressedPost(position: Int) {
-        dataSet[position].data.visited = true
+        dataSet[position].data.readPost = true
         notifyDataSetChanged()
     }
 
@@ -60,7 +60,7 @@ class AdapterItem(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun setItem(item: RedditResponseDataChildren) {
-            if (item.data.visited) {
+            if (item.data.readPost) {
                 binding.ivStatus.visibility = View.GONE
             } else {
                 binding.ivStatus.visibility = View.VISIBLE

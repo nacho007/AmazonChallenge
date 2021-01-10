@@ -13,8 +13,7 @@ data class RedditDataChildrenData(
     @SerializedName("created") val created: Int,
     @SerializedName("thumbnail") val thumbnail: String,
     @SerializedName("url") val url: String,
-    @SerializedName("num_comments") val numComments: Int,
-    @SerializedName("visited") val visited: Boolean
+    @SerializedName("num_comments") val numComments: Int
 ) {
     fun toRedditResponseDataChildrenData(): RedditResponseDataChildrenData {
         return RedditResponseDataChildrenData(
@@ -25,7 +24,7 @@ data class RedditDataChildrenData(
             thumbnail = thumbnail,
             url = url,
             numComments = numComments,
-            visited = visited
+            readPost = false
         )
     }
 }

@@ -27,9 +27,9 @@ internal class ListViewModel(
 
     override fun onLoadData() {
         if (redditResponse == null) {
-            if (BuildConfig.PRODUCT_FLAVOUR == LOCAL) {
+            if (BuildConfig.FLAVOR == LOCAL) {
                 getLocalRedditEntries()
-            } else if (BuildConfig.PRODUCT_FLAVOUR == NETWORK) {
+            } else if (BuildConfig.FLAVOR == NETWORK) {
                 getNetWorkRedditEntries()
             }
         } else {
@@ -43,6 +43,7 @@ internal class ListViewModel(
             val action = when (val it = getLocalRedditEntriesAction()) {
                 is GetLocalRedditEntriesAction.Result.Success -> {
                     redditResponse = it.value
+                    markVisitedPosts()
                     Action.GetRedditSuccess(redditResponse)
                 }
                 GetLocalRedditEntriesAction.Result.Error -> Action.Failure()
@@ -62,6 +63,7 @@ internal class ListViewModel(
             val action = when (val it = getNetWorkRedditEntriesAction()) {
                 is GetNetWorkRedditEntriesAction.Result.Success -> {
                     redditResponse = it.value
+                    markVisitedPosts()
                     Action.GetRedditSuccess(redditResponse)
                 }
                 is GetNetWorkRedditEntriesAction.Result.Error -> Action.Failure(message = it.value?.description)
@@ -73,6 +75,24 @@ internal class ListViewModel(
 
     fun updateNetworkPostStatus(id: String) {
         getNetWorkRedditEntriesAction.updatePostStatus(id)
+    }
+
+    private fun markVisitedPosts() {
+        if (BuildConfig.FLAVOR == LOCAL) {
+            val visitedPostIds = getLocalRedditEntriesAction.getVisitedPosts()
+            redditResponse?.redditResponseData?.children?.forEach {
+                if (visitedPostIds.contains(it.data.id)) {
+                    it.data.readPost = true
+                }
+            }
+        } else if (BuildConfig.FLAVOR == NETWORK) {
+            val visitedPostIds = getNetWorkRedditEntriesAction.getVisitedPosts()
+            redditResponse?.redditResponseData?.children?.forEach {
+                if (visitedPostIds.contains(it.data.id)) {
+                    it.data.readPost = true
+                }
+            }
+        }
     }
 
     fun deletePost(element: RedditResponseDataChildren) {

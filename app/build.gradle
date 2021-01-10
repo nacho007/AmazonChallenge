@@ -7,8 +7,8 @@ android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
-    viewBinding {
-        enabled true
+    buildFeatures {
+        viewBinding true
     }
 
     defaultConfig {
@@ -42,11 +42,9 @@ android {
     productFlavors {
         local {
             versionNameSuffix "-local"
-            buildConfigField "String", "PRODUCT_FLAVOUR", '"LOCAL"'
         }
         network {
             versionNameSuffix "-network"
-            buildConfigField "String", "PRODUCT_FLAVOUR", '"NETWORK"'
         }
     }
 

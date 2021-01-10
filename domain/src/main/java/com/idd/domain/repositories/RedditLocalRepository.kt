@@ -6,4 +6,5 @@ import com.idd.domain.models.reddit.RedditResponse
 interface RedditLocalRepository {
     fun getReddits(): ResultWrapper<RedditResponse>
     fun updatePostStatus(id: String)
+    fun getVisitedPosts(): List<String>
 }
