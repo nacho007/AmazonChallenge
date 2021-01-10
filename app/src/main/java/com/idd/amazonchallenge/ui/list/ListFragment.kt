@@ -53,6 +53,7 @@ class ListFragment : Fragment() {
 
             srl.setOnRefreshListener {
                 viewModel.deleteAllPost()
+                scrollListener?.resetState()
                 getRedditEntries()
             }
 
@@ -70,7 +71,7 @@ class ListFragment : Fragment() {
 
             public override fun onLoadMore(page: Int, totalItemsCount: Int, view: RecyclerView) {
                 if (viewAdapter.itemCount / PAGE_SIZE >= page) {
-                    viewAdapter.isLoading = true
+                    viewAdapter.dataSet[viewAdapter.itemCount - 1].isLoading = true
                     getRedditEntries()
                 }
             }

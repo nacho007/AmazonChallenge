@@ -24,8 +24,6 @@ class AdapterItem(
     ) -> Unit
 ) : RecyclerView.Adapter<AdapterItem.ViewHolder>() {
 
-    var isLoading = false
-
     data class ItemResponse(
         val view: View,
         val item: RedditResponseDataChildrenData? = null,
@@ -39,7 +37,7 @@ class AdapterItem(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.setItem(dataSet[position], isLoading)
+        holder.setItem(dataSet[position])
     }
 
     override fun getItemCount() = dataSet.size
@@ -63,21 +61,20 @@ class AdapterItem(
         ) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun setItem(item: RedditResponseDataChildrenData, isLoading: Boolean) {
-            if (item.readPost) {
-                binding.ivStatus.visibility = GONE
+        fun setItem(item: RedditResponseDataChildrenData) {
+            binding.ivStatus.visibility = if (item.readPost) {
+                GONE
             } else {
-                binding.ivStatus.visibility = VISIBLE
+                VISIBLE
             }
 
+            binding.pbLoader.visibility = if (item.isLoading) {
+                VISIBLE
+            } else {
+                GONE
+            }
 
-            binding.pbLoader.visibility = GONE
-//            if (isLoading) {
-//                binding.pbLoader.visibility = VISIBLE
-//            } else {
-//                binding.pbLoader.visibility = GONE
-//            }
-
+            item.isLoading = false
             binding.tvAuthor.text = item.author
             binding.tvTitle.text = item.title
             binding.tvCreationDate.text =

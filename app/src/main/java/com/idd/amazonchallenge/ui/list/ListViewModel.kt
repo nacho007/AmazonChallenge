@@ -29,6 +29,7 @@ internal class ListViewModel(
 
     override fun onLoadData() {
         if (redditResponse.isNullOrEmpty()) {
+            sendAction(Action.Loading)
             if (BuildConfig.FLAVOR == LOCAL) {
                 getLocalRedditEntries()
             } else if (BuildConfig.FLAVOR == NETWORK) {
@@ -40,7 +41,6 @@ internal class ListViewModel(
     }
 
     fun getLocalRedditEntries() {
-        sendAction(Action.Loading)
         viewModelScope.launch {
             val action = when (val it = getLocalRedditEntriesAction()) {
                 is GetLocalRedditEntriesAction.Result.Success -> {
@@ -61,7 +61,6 @@ internal class ListViewModel(
     }
 
     fun getNetWorkRedditEntries() {
-        sendAction(Action.Loading)
         viewModelScope.launch {
             val action = when (val it = getNetWorkRedditEntriesAction(PAGE_SIZE, after)) {
                 is GetNetWorkRedditEntriesAction.Result.Success -> {
@@ -91,7 +90,8 @@ internal class ListViewModel(
                 thumbnail = children.data.thumbnail,
                 url = children.data.url,
                 numComments = children.data.numComments,
-                readPost = false
+                readPost = false,
+                isLoading = false
             )
         }?.toMutableList() ?: mutableListOf())
     }
