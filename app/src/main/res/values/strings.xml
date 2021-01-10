@@ -27,4 +27,7 @@
 
     <string name="permission_title" translatable="false">Permission</string>
     <string name="write_permission_request" translatable="false">We need permission to store the image in the picture gallery</string>
+
+    <string name="internet_error" translatable="false">"Internet connection not detected. Please check your connection and try again."</string>
+    <string name="no_posts" translatable="false">No Posts!</string>
 </resources>

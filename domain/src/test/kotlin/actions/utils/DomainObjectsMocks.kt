@@ -1,7 +1,7 @@
 package actions.utils
 
-import com.idd.domain.models.RedditResponse
-import com.idd.domain.models.RedditResponseData
+import com.idd.domain.models.reddit.RedditResponse
+import com.idd.domain.models.reddit.RedditResponseData
 
 object DomainObjectsMocks {
 

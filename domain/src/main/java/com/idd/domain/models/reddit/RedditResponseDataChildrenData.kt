@@ -1,4 +1,4 @@
-package com.idd.domain.models
+package com.idd.domain.models.reddit
 
 /**
  * Created by ignaciodeandreisdenis on 1/6/21.
@@ -11,5 +11,5 @@ data class RedditResponseDataChildrenData(
     val thumbnail: String,
     val url: String,
     val numComments: Int,
-    var visited: Boolean
+    var readPost: Boolean
 )

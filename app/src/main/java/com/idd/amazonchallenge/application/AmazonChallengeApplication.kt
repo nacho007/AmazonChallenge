@@ -1,9 +1,7 @@
 package com.idd.amazonchallenge.application
 
 import android.app.Application
-import com.idd.amazonchallenge.di.actionsModule
-import com.idd.amazonchallenge.di.repositoriesModule
-import com.idd.amazonchallenge.di.viewModelsModule
+import com.idd.amazonchallenge.di.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -21,6 +19,7 @@ class AmazonChallengeApplication : Application() {
                 listOf(
                     repositoriesModule,
                     viewModelsModule,
+                    netWorkModule,
                     actionsModule
                 )
             )

@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -22,7 +23,7 @@ import com.idd.amazonchallenge.R
 import com.idd.amazonchallenge.databinding.FragmentDetailBinding
 import com.idd.amazonchallenge.utils.showPermissionRequestDialog
 import com.idd.amazonchallenge.utils.toast
-import com.idd.domain.models.RedditParams
+import com.idd.domain.models.reddit.RedditParams
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -77,7 +78,7 @@ class DetailFragment : Fragment() {
             if (redditParams != null) {
                 tvAuthor.text = redditParams?.author
 
-                if (redditParams?.avatarUrl?.isNotEmpty() == true) {
+                if (redditParams?.avatarUrl?.isNotEmpty() == true && URLUtil.isValidUrl(redditParams?.avatarUrl)) {
                     btnSaveImage.visibility = View.VISIBLE
 
                     Glide.with(requireContext())

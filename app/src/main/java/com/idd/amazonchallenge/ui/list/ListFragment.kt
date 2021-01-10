@@ -3,15 +3,22 @@ package com.idd.amazonchallenge.ui.list
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.idd.amazonchallenge.BuildConfig
 import com.idd.amazonchallenge.R
+import com.idd.amazonchallenge.constants.LOCAL
+import com.idd.amazonchallenge.constants.NETWORK
 import com.idd.amazonchallenge.databinding.FragmentListBinding
 import com.idd.amazonchallenge.ui.MainActivity
 import com.idd.amazonchallenge.utils.Utils
 import com.idd.amazonchallenge.utils.toast
+import com.idd.domain.models.reddit.RedditResponseDataChildren
 import org.koin.android.viewmodel.ext.android.viewModel
 
 /**
@@ -43,34 +50,44 @@ class ListFragment : Fragment() {
             )
 
             srl.setOnRefreshListener {
-                viewModel.getLocalRedditEntries(true)
+                getRedditEntries()
             }
 
+            tvEmpty.visibility = GONE
             btnDismissAll.setOnClickListener { removeAllItems() }
         }
+
         observeViewModel()
-        viewModel.getLocalRedditEntries(false)
+        viewModel.loadData()
+    }
+
+    private fun getRedditEntries() {
+        if (BuildConfig.FLAVOR == LOCAL) {
+            viewModel.getLocalRedditEntries()
+        } else if (BuildConfig.FLAVOR == NETWORK) {
+            viewModel.getNetWorkRedditEntries()
+        }
+    }
+
+    private fun updatePostStatus(id: String) {
+        if (BuildConfig.FLAVOR == LOCAL) {
+            viewModel.updateLocalPostStatus(id)
+        } else if (BuildConfig.FLAVOR == NETWORK) {
+            viewModel.updateNetworkPostStatus(id)
+        }
     }
 
     private fun observeViewModel() {
         viewModel.stateLiveData.observe(viewLifecycleOwner, {
-            val isRefreshing = it.isRefreshing
-
-            if (it.isLoading) {
-                binding.pbLoader.visibility = View.VISIBLE
+            if (it.isLoading && !binding.srl.isRefreshing) {
+                binding.pbLoader.visibility = VISIBLE
             } else {
-                binding.pbLoader.visibility = View.GONE
+                binding.pbLoader.visibility = GONE
             }
 
+
             it.redditEntries?.let { redditResponse ->
-                if (isRefreshing) {
-                    viewAdapter.dataSet =
-                        redditResponse.redditResponseData.children?.toMutableList()
-                            ?: arrayListOf()
-                    viewAdapter.notifyDataSetChanged()
-                    binding.srl.isRefreshing = false
-                    context?.toast(getString(R.string.list_updated))
-                } else {
+                if (binding.rvItems.adapter == null) {
                     binding.rvItems.apply {
                         addItemDecoration(
                             DividerItemDecoration(
@@ -83,41 +100,69 @@ class ListFragment : Fragment() {
 
                         viewAdapter = AdapterItem(
                             redditResponse.redditResponseData.children?.toMutableList()
-                                ?: mutableListOf()
-                        ) { view, item, avatarUrl ->
+                                ?: arrayListOf()
+                        ) { itemResponse ->
                             when {
-                                avatarUrl?.isNotEmpty() == true -> {
-                                    Utils.openWebBrowser(requireContext(), avatarUrl)
+                                itemResponse.avatarUrl.isNotEmpty() -> {
+                                    Utils.openWebBrowser(requireContext(), itemResponse.avatarUrl)
                                 }
-                                item == null -> {
-                                    removeItem(view)
+                                itemResponse.removingPost -> {
+                                    itemResponse.item?.let { redditItem ->
+                                        removeItem(itemResponse.view, redditItem)
+                                    }
                                 }
                                 else -> {
-                                    viewModel.updateLocalPostStatus(item.data.id)
+                                    itemResponse.item?.data?.id?.let { id ->
+                                        updatePostStatus(id)
+                                    }
+
                                     viewAdapter.pressedPost(
                                         binding.rvItems.getChildAdapterPosition(
-                                            view
+                                            itemResponse.view
                                         )
                                     )
-                                    (activity as MainActivity).setDetail(item)
+                                    itemResponse.item?.let { redditItem ->
+                                        (activity as MainActivity).setDetail(redditItem)
+                                    }
                                 }
                             }
                         }
                         adapter = viewAdapter
                     }
+
+                    viewAdapter.stateRestorationPolicy =
+                        RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+                } else {
+                    viewAdapter.dataSet =
+                        redditResponse.redditResponseData.children?.toMutableList()
+                            ?: arrayListOf()
+                    viewAdapter.notifyDataSetChanged()
+                    binding.srl.isRefreshing = false
+                    context?.toast(getString(R.string.list_updated))
                 }
+
+                binding.tvEmpty.visibility =
+                    if (it.redditEntries.redditResponseData.children?.isNotEmpty() == true) {
+                        GONE
+                    } else {
+                        VISIBLE
+                    }
+
             }
         })
     }
 
     private fun removeAllItems() {
+        binding.tvEmpty.visibility = VISIBLE
         for (i in viewAdapter.itemCount - 1 downTo 0) {
             viewAdapter.deleteItem(i)
         }
+        viewModel.deleteAllPost()
     }
 
-    private fun removeItem(view: View) {
+    private fun removeItem(view: View, item: RedditResponseDataChildren) {
         viewAdapter.deleteItem(binding.rvItems.getChildAdapterPosition(view))
+        viewModel.deletePost(item)
     }
 
     companion object {
