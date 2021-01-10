@@ -1,14 +1,12 @@
 package actions
 
 import actions.utils.DomainObjectsMocks
-import com.idd.domain.actions.GetLocalRedditEntriesAction
 import com.idd.domain.actions.GetNetWorkRedditEntriesAction
 import com.idd.domain.models.ResultWrapper
 import com.idd.domain.models.reddit.RedditResponse
 import com.idd.domain.repositories.RedditNetworkRepository
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
