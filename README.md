@@ -12,20 +12,20 @@ Applied SOLID principles
 Applied code convention -> (https://github.com/futurice/android-best-practices)
 
 # Technical
-Android Jetpack
-MVVM
-Coroutines
-KOIN (Dependency Injection)
-Glide
-View Binding
+Android Jetpack,
+MVVM,
+Coroutines,
+KOIN (Dependency Injection),
+Glide,
+View Binding,
 JUNIT
 
 # Design
+Custom fonts (roboto),
+Dark Theme support,
 Icons
-Dark Theme support
-Custom fonts (roboto)
 
 # Unit Test
-(Given, when then)
-Unit test for 'domain' Actions
+(Given, when then),
+Unit test for 'domain' Actions,
 Unit test for 'app' View Models
