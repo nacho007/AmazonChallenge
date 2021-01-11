@@ -17,6 +17,7 @@ MVVM,
 Coroutines,
 KOIN (Dependency Injection),
 Glide,
+Retrofit,
 View Binding,
 JUNIT
 
@@ -26,6 +27,19 @@ Dark Theme support,
 Icons
 
 # Unit Test
-(Given, when then),
+Mocking library -> Mockk (https://mockk.io),
 Unit test for 'domain' Actions,
-Unit test for 'app' View Models
+Unit test for 'app' View Models,
+(Given, when then)
+
+# Important!
+The app has 2 flavours 'local' and 'network'.
+'local reads from local file 'top.json'.
+'network' consumes Reddit API.
+
+# Paging
+Evaluated the use of Paging 3.0, but unfortunetelly the lists are immutable, unless using a room db, which considered as a boilerplate.
+
+
+
+
