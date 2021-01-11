@@ -70,6 +70,7 @@
             android:layout_height="wrap_content"
             android:drawablePadding="@dimen/padding"
             app:drawableEndCompat="@drawable/ic_disclosure_24"
+            app:drawableTint="@color/disclosure"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." />
     </LinearLayout>
 
@@ -101,7 +102,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_num_comments"
-        style="?android:attr/progressBarStyle" />
+        style="?android:attr/progressBarStyle"
+        tools:visibility="gone" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

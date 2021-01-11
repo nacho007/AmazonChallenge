@@ -10,4 +10,7 @@
     <color name="red">#FF0000</color>
     <color name="salmon">#E15761</color>
     <color name="gray">#32c3c3c3</color>
+    <color name="black_light">#1c1c1c</color>
+    <color name="background">@color/white</color>
+    <color name="disclosure">@color/black</color>
 </resources>
