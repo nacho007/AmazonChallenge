@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">AmazonChallenge</string>
+
+    <string name="dismiss_post" translatable="false">Dismiss Post</string>
+    <string name="dismiss_all" translatable="false">Dismiss All</string>
+    <string name="save_image" translatable="false">Save Image</string>
+    <string name="saved_to_photos" translatable="false">Saved to Photos</string>
+    <string name="failed_to_load_image" translatable="false">Failed to load image</string>
+    <string name="comments" translatable="false">%s comments</string>
+
+    <string name="seconds" translatable="false">"seconds"</string>
+    <string name="second" translatable="false">"second"</string>
+    <string name="minutes" translatable="false">"minutes"</string>
+    <string name="minute" translatable="false">"minute"</string>
+    <string name="hours" translatable="false">"hours"</string>
+    <string name="hour" translatable="false">"hour"</string>
+    <string name="days" translatable="false">"days"</string>
+    <string name="day" translatable="false">"day"</string>
+    <string name="years" translatable="false">"years"</string>
+    <string name="year" translatable="false">"year"</string>
+    <string name="creation_time_text" translatable="false">"%d %s ago"</string>
+
+    <string name="install_a_web_browser" translatable="false">Please install a web browser</string>
+    <string name="no_post_selected" translatable="false">No post selected</string>
+    <string name="generic_error" translatable="false">"We are experiencing difficulties with the system. Please try again later."</string>
+    <string name="list_updated" translatable="false">"List updated!"</string>
+
+    <string name="permission_title" translatable="false">Permission</string>
+    <string name="write_permission_request" translatable="false">We need permission to store the image in the picture gallery</string>
+
+    <string name="internet_error" translatable="false">"Internet connection not detected. Please check your connection and try again."</string>
+    <string name="no_posts" translatable="false">No Posts!</string>
+    <string name="no_more_data" translatable="false">"No more data to display"</string>
+</resources>
