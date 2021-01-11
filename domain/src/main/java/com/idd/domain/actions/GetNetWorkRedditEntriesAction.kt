@@ -18,10 +18,10 @@ class GetNetWorkRedditEntriesAction(
     }
 
     suspend operator fun invoke(pageSize: Int, after: String?): Result {
-        return when (val result = redditNetworkRepository.getReddits(pageSize, after)) {
-            is ResultWrapper.Success -> Result.Success(result.value)
+        return when (val resultWrapper = redditNetworkRepository.getReddits(pageSize, after)) {
+            is ResultWrapper.Success -> Result.Success(resultWrapper.value)
             is ResultWrapper.NetworkError -> Result.NetworkError
-            is ResultWrapper.Error -> Result.Error(result.error)
+            is ResultWrapper.Error -> Result.Error(resultWrapper.error)
             else -> Result.Error()
         }
     }

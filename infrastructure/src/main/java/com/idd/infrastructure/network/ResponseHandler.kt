@@ -13,7 +13,7 @@ import java.io.IOException
  * Created by ignaciodeandreisdenis on 1/8/21.
  */
 class ResponseHandler(
-    private val dispatcher: CoroutineDispatcher,
+    private val dispatcher: CoroutineDispatcher
 ) {
     suspend operator fun <T : Any> invoke(apiCall: suspend () -> T): ResultWrapper<T> {
         return withContext(dispatcher) {
